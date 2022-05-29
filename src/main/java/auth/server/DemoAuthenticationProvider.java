@@ -1,6 +1,7 @@
 package auth.server;
 
-import auth.common.GlobalConstants;
+import auth.client.DemoAuthentication;
+import auth.client.DemoAuthenticationDataProvider;
 import auth.service.RoleService;
 import auth.service.RoleServiceImpl;
 import org.apache.pulsar.broker.ServiceConfiguration;
@@ -20,35 +21,36 @@ public class DemoAuthenticationProvider implements AuthenticationProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(DemoAuthenticationProvider.class);
     private static RoleService roleService = new RoleServiceImpl();
-    private Set<String> superRoles;
 
     @Override
     public void initialize(ServiceConfiguration config) throws IOException {
         if (config == null) {
             return;
         }
-        superRoles = config.getSuperUserRoles();
+        Set<String> superRoles = config.getSuperUserRoles();
         logger.info("Super roles: {}", superRoles);
     }
 
     @Override
     public String getAuthMethodName() {
-        return GlobalConstants.AUTH_METHOD_NAME;
+        return DemoAuthentication.AUTH_METHOD_NAME;
     }
 
     @Override
     public String authenticate(AuthenticationDataSource authData) throws AuthenticationException {
+        String data;
         if (authData.hasDataFromCommand()) {
-            String data = authData.getCommandData();
-            String role = roleService.getRole(data);
-            logger.info("Command authenticate role: {}", role);
-            return role;
+            data = authData.getCommandData();
+            logger.info("FromCommand, data: {}", data);
         } else if (authData.hasDataFromHttp()) {
-            String role = roleService.getRole(superRoles);
-            logger.info("Http authenticate role: {}", role);
-            return role;
+            data = authData.getHttpHeader(DemoAuthenticationDataProvider.HTTP_HEADER_NAME);
+            logger.info("FromHttp, data: {}", data);
+        } else {
+            throw new AuthenticationException("authenticate failed");
         }
-        throw new AuthenticationException("authenticate failed");
+        String role = roleService.getRole(data);
+        logger.info("Authenticate role: {}", role);
+        return role;
     }
 
     @Override

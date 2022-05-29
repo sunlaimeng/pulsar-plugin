@@ -335,7 +335,7 @@ jwt.broker.private.key=/pulsar-manager/pulsar-manager/jwt-private.key
 1. 服务端客户端代码打成jar包，copy到pulsar容器
 
 ```
-docker cp D:\idea\IdeaProjects\demo\pulsar-plugin\target\pulsar-plugin-1.0-SNAPSHOT.jar 14a8f7a6ad25:/pulsar/lib/
+docker cp D:\idea\IdeaProjects\demo\pulsar-plugin\pulsar-plugin\target\pulsar-plugin-1.0-SNAPSHOT.jar 14a8f7a6ad25:/pulsar/lib/
 ```
 
 2. mysql的jar包，copy到pulsar容器
@@ -351,6 +351,21 @@ authenticationEnabled=true
 authenticationProviders=auth.server.DemoAuthenticationProvider
 brokerClientAuthenticationPlugin=auth.client.DemoAuthentication
 brokerClientAuthenticationParameters=accessId:2a76b9719d911017c592,accessKey:7d793037a0760186574b0282f2f435e7
+```
+
+4. client.conf配置（PulsarAdmin）
+
+```properties
+webServiceUrl=http://localhost:8080/
+brokerServiceUrl=pulsar://localhost:6650/
+authPlugin=auth.client.DemoAuthentication
+authParams=accessId:2a76b9719d911017c592,accessKey:7d793037a0760186574b0282f2f435e7
+```
+
+5. application.properties配置（Pulsar-Manager）
+
+```properties
+
 ```
 
 

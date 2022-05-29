@@ -1,6 +1,5 @@
 package auth.client;
 
-import auth.common.GlobalConstants;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.AuthenticationDataProvider;
 import org.apache.pulsar.client.api.PulsarClientException;
@@ -12,7 +11,7 @@ import java.util.Map;
  * @author lamen 2022/5/27
  */
 public class DemoAuthentication implements Authentication {
-
+    public static final String AUTH_METHOD_NAME = "demo_hello_world";
     private String accessId;
     private String accessKey;
 
@@ -26,7 +25,7 @@ public class DemoAuthentication implements Authentication {
 
     @Override
     public String getAuthMethodName() {
-        return GlobalConstants.AUTH_METHOD_NAME;
+        return AUTH_METHOD_NAME;
     }
 
     @Override

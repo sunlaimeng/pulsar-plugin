@@ -13,8 +13,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * @author lamen 2022/5/28
@@ -25,6 +23,9 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public String getRole(String data) throws AuthenticationException {
+        if (data == null || data.length() == 0) {
+            throw new AuthenticationException("Invalid authentication");
+        }
         try {
             JsonObject jsonObject = new Gson().fromJson(data, JsonObject.class);
             String username = jsonObject.get("username").getAsString();
@@ -43,16 +44,6 @@ public class RoleServiceImpl implements RoleService {
             logger.error("Get role failed.", e);
         }
         throw new AuthenticationException("Invalid authentication");
-    }
-
-    @Override
-    public String getRole(Set<String> superRoles) throws AuthenticationException {
-        if (superRoles != null && superRoles.size() > 0) {
-            for (String role : superRoles) {
-                return role;
-            }
-        }
-        throw new AuthenticationException("Super role empty");
     }
 
     private User getUser(String accessId) {
