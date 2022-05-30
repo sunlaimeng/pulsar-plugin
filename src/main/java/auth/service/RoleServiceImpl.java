@@ -1,7 +1,7 @@
 package auth.service;
 
 import auth.bean.User;
-import auth.util.DBUtil;
+import auth.util.DruidUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -47,14 +47,15 @@ public class RoleServiceImpl implements RoleService {
     }
 
     private User getUser(String accessId) {
-        Connection conn = DBUtil.getConnection();
+        Connection conn = null;
         String sql = "select access_id, access_key, `role` from `user` where access_id = ?";
         ResultSet resultSet = null;
         try {
+            conn = DruidUtil.getConnection();
             PreparedStatement statement = conn.prepareStatement(sql);
             statement.setString(1, accessId);
             resultSet = statement.executeQuery();
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 User user = new User();
                 user.setAccessId(resultSet.getString("access_id"));
                 user.setAccessKey(resultSet.getString("access_key"));
@@ -69,6 +70,13 @@ public class RoleServiceImpl implements RoleService {
                     resultSet.close();
                 } catch (SQLException e) {
                     logger.error("ResultSet close failed.", e);
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    logger.error("Connection close failed.", e);
                 }
             }
         }

@@ -342,6 +342,8 @@ docker cp D:\idea\IdeaProjects\demo\pulsar-plugin\pulsar-plugin\target\pulsar-pl
 
 ```
 docker cp D:\repository\mysql\mysql-connector-java\8.0.27\mysql-connector-java-8.0.27.jar 14a8f7a6ad25:/pulsar/lib/
+
+docker cp D:\repository\com\alibaba\druid\1.2.8\druid-1.2.8.jar 14a8f7a6ad25:/pulsar/lib/
 ```
 
 3. broker.conf配置（单机配置standalone.conf）
