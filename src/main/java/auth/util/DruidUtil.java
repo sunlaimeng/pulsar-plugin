@@ -15,11 +15,11 @@ import java.util.Properties;
  */
 public class DruidUtil {
     private static final Logger logger = LoggerFactory.getLogger(DruidUtil.class);
+    private static final String FILE_PATH = "druid.properties";
     private static DataSource dataSource;
     static {
-        try {
-            Properties properties = new Properties();
-            InputStream inputStream = DruidUtil.class.getClassLoader().getResourceAsStream("druid.properties");
+        Properties properties = new Properties();
+        try (InputStream inputStream = DruidUtil.class.getClassLoader().getResourceAsStream(FILE_PATH)) {
             properties.load(inputStream);
             dataSource = DruidDataSourceFactory.createDataSource(properties);
         } catch (Exception e) {
